@@ -22,10 +22,9 @@
         "preset": "conventionalcommits"
       }
     ],
-    "@semantic-release/exec",
     [
+      "@semantic-release/changelog",
       {
-        "@semantic-release/changelog": null,
         "changelogFile": "CHANGELOG.md",
         "changelogTitle": "# Changelog"
       }
