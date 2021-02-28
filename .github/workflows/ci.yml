@@ -8,7 +8,7 @@ on:
     
 
 jobs:
-  validate_module:
+  verify_module:
     name: Verify module
     strategy:
       matrix:
@@ -38,3 +38,20 @@ jobs:
       - run: terraform init -get -backend=false -input=false
       - run: terraform fmt -recursive -check=true -write=false
       - run: terraform validate
+
+  release:
+    if: contains('refs/heads/master', github.ref)
+    name: Release
+    needs: [verify_module, verify_examples]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: |
+          cp .release/* .
+          yarn 
+      - name: relesase
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn release --repositoryUrl https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git
